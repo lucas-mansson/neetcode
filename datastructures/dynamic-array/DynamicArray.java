@@ -1,6 +1,6 @@
-public class DynamicArray {
+public class DynamicArray<T> {
     
-    private int[] arr;
+    private Object[] arr;
     private int size;
     private int capacity;
 
@@ -8,23 +8,24 @@ public class DynamicArray {
         if(capacity <= 0) {
             throw new IllegalArgumentException();
         }
-        this.arr = new int[capacity];
+        this.arr = new Object[capacity];
         this.capacity = capacity;
         this.size = 0;
     }
 
-    public int get(int i) {
-        return arr[i];
+    @SuppressWarnings("unchecked")
+    public T get(int i) {
+        return (T) arr[i];
     }
 
-    public void set(int i, int n) throws IllegalArgumentException {
+    public void set(int i, Object n) throws IndexOutOfBoundsException {
         if(i < 0 || i >= size) {
-            throw new IllegalArgumentException();
+            throw new IndexOutOfBoundsException();
         }
         arr[i] = n;
     }
 
-    public void pushback(int n) {
+    public void pushback(Object n) {
         int insertAt = size;
         if(size + 1 > capacity){
             resize();
@@ -33,16 +34,20 @@ public class DynamicArray {
         arr[insertAt] = n;
     }
 
-    public int popback() {
+    @SuppressWarnings("unchecked")
+    public T popback() throws IllegalStateException {
+        if (size <= 0){
+            throw new IllegalStateException();
+        }
         size--;
-        int res = arr[size];
-        arr[size] = 0;
+        T res = (T) arr[size];
+        arr[size] = null;
         return res;
     }
 
     private void resize() {
         this.capacity *= 2;
-        int[] res = new int[capacity];
+        Object[] res = new Object[capacity];
         for (int i = 0; i < size; i++){
             res[i] = arr[i];
         }
